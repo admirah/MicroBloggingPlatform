@@ -1,0 +1,99 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:700);
+@import url(https://fonts.googleapis.com/css?family=Righteous);
+
+h1{
+    font-family: 'Righteous', cursive;
+    text-align: center;
+    color:#83b2ac;
+    font-size:60px;
+    margin:0;
+      text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+.body{
+    height:50px;
+    width:50px;
+    margin: 0 20px 0 0;
+    
+}
+
+.bodylogin{
+    height:100px;
+    width:100px;
+    margin:auto auto 0 auto;
+}
+
+.logotabela{
+	width:100%; margin:10px 0;
+}
+
+.logotabela td{
+	/*width:60px;*/
+}
+.logoframe{
+    
+   width:100%;/*80px;*/
+height:100%;/*80px;*/
+     border:2px solid black;
+    border-radius:1000px;
+    background-color:#83b2ac;
+    
+}
+
+.logoframelogo{
+    border:3px solid black;
+    
+}
+
+.okoleft{
+    
+    margin-top:12% ;/*10px;*/
+    width:12% ;/*10px;*/
+    height:19%;/*15px;*/
+    margin-left:25% ;/*20px;*/
+    border-radius:50px;
+    float:left;
+    background-color:#eefffd;
+}
+
+.okoright{
+    margin-top:12% ;/*10px;*/
+    width:12% ;/*10px;*/
+    height:19%;/*15px;*/
+    margin-right:25% ;/*20px;*/
+    border-radius:50px;
+    display:inline;
+    float:right;
+    background-color:#eefffd;
+}
+.oko{
+    
+    width:81%; /*65px*/
+    margin:0px auto;
+    height: 50%; /*50px*/
+    
+    margin-top:12% ;/*10px;*/
+     border-radius:50%;
+border-bottom: 9px solid #eefffd;
+    
+}
+.okologin{
+    height:55%;
+    border-bottom: 12px solid #eefffd;
+}
+.oko:hover {
+    transform: rotate(360deg);
+    border-bottom: 15px solid #eefffd;
+    transition: all 1s;
+
+}
+
+.okologin:hover{
+     transform: rotate(360deg);
+    border-bottom: 20px solid #eefffd;
+    transition: all 1s;
+
+}
+
+.klasanijeinline {
+    width: 52px;
+}
