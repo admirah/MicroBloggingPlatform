@@ -17,24 +17,28 @@ function registerValidation() {
 
 window.onload = function () {
 
- 
+
 
 }
 
 function validation(element) {
     if (element.value == "" || element.value == null) {
-     if(element.id!="web")  { element.style.backgroundColor = "#D9837F";
-        regFormValid = false;}
-        else {  element.style.backgroundColor = "#93D96F";
-                regFormValid = true;}
-    
+        if (element.id != "web") {
+            element.style.backgroundColor = "#D9837F";
+            regFormValid = false;
+        } else {
+            element.style.backgroundColor = "white";
+            regFormValid = true;
+        }
+
     } else {
- if(element.id=="web"){  element.style.backgroundColor = "#93D96F";
-                regFormValid = true;}
-      else  if (element.id == "pass") {
+        if (element.id == "web") {
+            element.style.backgroundColor = "white";
+            regFormValid = true;
+        } else if (element.id == "pass") {
             var regex = /^[a-z0-9]{4,8}$/;
             if (regex.test(element.value)) {
-                element.style.backgroundColor = "#93D96F";
+                element.style.backgroundColor = "white";
                 regFormValid = true;
             } else {
                 element.style.backgroundColor = "#D9837F";
@@ -48,7 +52,7 @@ function validation(element) {
                 regFormValid = true;
                 labeladate.style.display = "none";
                 k.disabled = false;
-                element.style.backgroundColor = "#93D96F";
+                element.style.backgroundColor = "white";
             } else {
 
 
@@ -60,7 +64,7 @@ function validation(element) {
             }
         } else {
 
-            element.style.backgroundColor = "#93D96F";
+            element.style.backgroundColor = "white";
             regFormValid = true;
         }
 
@@ -83,35 +87,35 @@ function meetsMinimumAge(datum, minAge) {
 
 function profileValidation() {
 
-var profValid=true;
+    var profValid = true;
     var inputs = document.getElementsByTagName("textarea");
-    for (var i = 0; i < inputs.length ; i++) {
-       if(inputs[i].value=="" || inputs[i].value==null) profValid=false;
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].value == "" || inputs[i].value == null) profValid = false;
     }
     if (!profValid) alert("Your post can't be empty!")
-    
+
     return profValid;
 }
 
 function loginValidation() {
 
-var loginValid=true;
+    var loginValid = true;
     var inputs = document.getElementsByTagName("input");
     for (var i = 0; i < inputs.length - 1; i++) {
-       if(inputs[i].value=="" || inputs[i].value==null) loginValid=false;
+        if (inputs[i].value == "" || inputs[i].value == null) loginValid = false;
     }
     if (!loginValid) alert("Please enter username and password!")
-    
+
     return loginValid;
 }
 
 function indexValidation() {
-var profValid=true;
+    var profValid = true;
     var inputs = document.getElementsByTagName("textarea");
-    for (var i = 0; i < inputs.length ; i++) {
-       if(inputs[i].value=="" || inputs[i].value==null) profValid=false;
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].value == "" || inputs[i].value == null) profValid = false;
     }
     if (!profValid) alert("Your post can't be empty!")
-    
+
     return profValid;
 }
