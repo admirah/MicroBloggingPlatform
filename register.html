@@ -5,16 +5,17 @@
     <title>
         Register
     </title>
-  <link rel="stylesheet" type="text/css" href="style.css">
-	<link rel="stylesheet" type="text/css" href="logo.css">
-	  <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="logo.css">
+    <meta charset="utf-8">
+    <script src="validation.js"></script>
 </head>
 
 <body class="loginbody">
 
     <div id="navbar">
         <div class="nav">
-            <table class="logotabela" >
+            <table class="logotabela">
                 <tr>
                     <td class="klasanijeinline">
                         <div class="body">
@@ -44,7 +45,7 @@
                             </li>
                             <li> <a href="login.html">Login</a>
                             </li>
-							<li> <a href="register.html">Register</a>
+                            <li> <a href="register.html">Register</a>
                             </li>
                         </ul>
                     </td>
@@ -57,66 +58,69 @@
         </div>
     </div>
     <div id="posts">
-        <form class="post loginform ">
+        <form class="post loginform " name="forma" onsubmit="registerValidation(); return false;">
             <table class="loginform">
                 <tr>
                     <td>
                         <label>Full name:</label>
                     </td>
                     <td>
-                        <input type="text">
+                        <input type="text" name="register" id="name" onkeypress="validation(this)" onfocusout="validation(this)">
                     </td>
                 </tr>
-                 
-				  <tr>
+
+                <tr>
                     <td>
                         <label>Username:</label>
                     </td>
                     <td>
-                        <input type="text">
+                        <input type="text" name="register" id="username" onkeypress="validation(this)" onfocusout="validation(this)">
                     </td>
                 </tr>
-                 
+
                 <tr>
                     <td>
                         <label>Password:</label>
                     </td>
                     <td>
-                        <input type="password">
+                        <input placeholder="Must be 4-8 characters long" type="password" name="register" id="pass" onkeypress="validation(this)" onfocusout="validation(this)">
                     </td>
                 </tr>
-                 
-				  <tr>
+                <tr>
                     <td>
                         <label>Date of birth:</label>
                     </td>
                     <td>
-                        <input type="date">
+                        <input type="date" name="register" id="date" onkeypress="validation(this)" onfocusout="validation(this)">
                     </td>
                 </tr>
-                 
-				<tr>
+
+                <tr>
                     <td>
                         <label>Email:</label>
                     </td>
                     <td>
-                        <input type="email">
+                        <input type="email" name="register" id="email" onkeypress="validation(this)" onfocusout="validation(this)">
                     </td>
                 </tr>
-                 
-				<tr>
+
+                <tr>
                     <td>
                         <label>Website (optional):</label>
                     </td>
                     <td>
-                        <input type="url">
+                        <input type="url" name="register" id="web" onkeypress="validation(this)" onfocusout="validation(this)">
                     </td>
                 </tr>
-                 
+                <tr>
+                    <td colspan="2">
+                        <label id="labeladate">Hey! You are not 18 yet! You can't submit form!</label>
+                    </td>
+                </tr>
                 <tr>
                     <td></td>
                     <td>
-                        <input type=submit>
+                        <input type="submit" id="dugmic" name="register" >
                     </td>
                 </tr>
             </table>
