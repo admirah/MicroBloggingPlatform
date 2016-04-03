@@ -23,11 +23,15 @@ window.onload = function () {
 
 function validation(element) {
     if (element.value == "" || element.value == null) {
-        element.style.backgroundColor = "#D9837F";
-        regFormValid = false;
+     if(element.id!="web")  { element.style.backgroundColor = "#D9837F";
+        regFormValid = false;}
+        else {  element.style.backgroundColor = "#93D96F";
+                regFormValid = true;}
+    
     } else {
-
-        if (element.id == "pass") {
+ if(element.id=="web"){  element.style.backgroundColor = "#93D96F";
+                regFormValid = true;}
+      else  if (element.id == "pass") {
             var regex = /^[a-z0-9]{4,8}$/;
             if (regex.test(element.value)) {
                 element.style.backgroundColor = "#93D96F";
