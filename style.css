@@ -41,6 +41,11 @@ body {
 
 #labeladate{
     display:none;
+    color: #b28470;
+    font-weight: bold;
+    font-size:14px;
+    text-align:center;
+    margin:2px 0;
 }
 .post {
     width: 600px;
