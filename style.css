@@ -38,6 +38,10 @@ body {
     margin-right: 5px;
 }
 
+
+#labeladate{
+    display:none;
+}
 .post {
     width: 600px;
     background-color: #eefffd;
@@ -88,7 +92,13 @@ body {
     border-bottom: 1px solid #83b2ac;
     margin-bottom: 5px;
 }
+.datepomocni{
+    display:none;
+}
 
+.proteklo{
+    display:none;
+}
 .content {
     word-wrap: break-word;
     font-size: 17px;
@@ -310,4 +320,31 @@ input[type="submit"]:hover {
     padding: 7px 10px;
 }
 
- 
+/**select button**/
+
+
+.selectbutton 
+
+{
+     margin: 15px auto;
+    width: 600;
+}
+
+.selectbutton select{
+    text-align:center;
+   float:right;
+    margin-bottom:10px;
+    width:90px;
+    height:32px;
+    background-color: #83b2ac;
+    border-radius: 5px;
+    outline: none;
+    font-size: medium;
+    color: white;
+    padding:7px 10px;
+    margin-right:19px;
+}
+
+
+  .selectbutton select:hover
+{  background-color: #5a7b77;}
