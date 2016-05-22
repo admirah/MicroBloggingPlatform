@@ -64,7 +64,7 @@ function cmp($a, $b)
                         
                            
                            <div class="post">
-                            <form action="index.php" method="post">
+                            <form  onsubmit="indexValidation()" action="index.php" method="post">
                                 <div class="left">
                                     <?php if($postoji==1) {?><img alt="photo" class="photo" src="images/users/<?php echo $_SESSION["loggedUser"]; ?>.jpg">
                                         <?php } ?>
@@ -74,7 +74,7 @@ function cmp($a, $b)
                                         <?php echo getFullnameByUsername($_SESSION["loggedUser"]); ?>
                                     </a>
 
-                                    <textarea class="contentpost" name="noviUnos" rows="3"></textarea>
+                                    <textarea class="contentpost" name="noviUnos" rows="3" maxlength="200"></textarea>
                                     <input class="contentsubmit" name="post" type="submit" title="Post">
                                 </div>
                             </form>
@@ -87,7 +87,7 @@ function cmp($a, $b)
 
 
                             <div class="selectbutton">
-                                <form action="index.php" method="get">
+                                <form  action="index.php"  method="get">
                                     <input type="submit" name="abecedno" value="ABC">
 
                                     <input type="submit" value="Date" name="abecedno">
