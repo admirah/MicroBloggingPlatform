@@ -63,15 +63,20 @@ else {
 
 
 if(isset($_POST['post'])) {
-    date_default_timezone_set('Europe/Sarajevo');
+          date_default_timezone_set('Europe/Sarajevo');
     $postic = str_replace(",","&comma;",$_POST['newEntery']);
     $postic = str_replace(array("\r", "\n")," ", $postic);
-    $novaObjava = htmlentities($_SESSION['loggedUser']) . "," . htmlentities($postic) . "," . htmlentities(date("m.d.Y H:i")) . "\r\n";
-    $sveObjave = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv"); 
-   $sveObjave=$novaObjava . $sveObjave;
-   file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv",$sveObjave);
+        if($postic.length < 201) {
+            $novaObjava = htmlentities($_SESSION['loggedUser']) . "," . htmlentities($postic) . "," . htmlentities(date("m.d.Y H:i")) . "\r\n";
+            $sveObjave = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv"); 
+           $sveObjave=$novaObjava . $sveObjave;
+           file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv",$sveObjave);
+        }
+    
+        
 }
 ?>
+        
 
         <!doctype html>
         <html>
@@ -124,9 +129,7 @@ if(isset($_POST['post'])) {
                     <?php if ($loggedProfile) { ?>
                         <div class="post">
                             <div class="antiLR">
-                                <form onsubmit="profileValidation()" method="post" action="profile.php">
-
-
+                                <form onsubmit=" return profileValidation()" method="post" action="profile.php">
                                     <textarea class="contentpost" rows="3" name="newEntery" maxlength="200"></textarea>
                                     <input class="contentsubmit" type="submit" title="Post" name="post">
 

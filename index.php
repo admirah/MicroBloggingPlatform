@@ -19,10 +19,13 @@ function cmp($a, $b)
           date_default_timezone_set('Europe/Sarajevo');
     $postic = str_replace(",","&comma;",$_POST['noviUnos']);
     $postic = str_replace(array("\r", "\n")," ", $postic);
-    $novaObjava = htmlentities($_SESSION['loggedUser']) . "," . htmlentities($postic) . "," . htmlentities(date("m.d.Y H:i")) . "\r\n";
-    $sveObjave = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv"); 
-   $sveObjave=$novaObjava . $sveObjave;
-   file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv",$sveObjave);
+        if($postic.length < 201) {
+            $novaObjava = htmlentities($_SESSION['loggedUser']) . "," . htmlentities($postic) . "," . htmlentities(date("m.d.Y H:i")) . "\r\n";
+            $sveObjave = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv"); 
+           $sveObjave=$novaObjava . $sveObjave;
+           file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv",$sveObjave);
+        }
+    
         
 }
 
@@ -64,7 +67,7 @@ function cmp($a, $b)
                         
                            
                            <div class="post">
-                            <form  onsubmit="indexValidation()" action="index.php" method="post">
+                            <form  onsubmit="return indexValidation()" action="index.php" method="post">
                                 <div class="left">
                                     <?php if($postoji==1) {?><img alt="photo" class="photo" src="images/users/<?php echo $_SESSION["loggedUser"]; ?>.jpg">
                                         <?php } ?>

@@ -40,7 +40,7 @@ if(isset($_POST['descSubmit'])) {
                     <div class="antiLR">
                         <form action="dodajOpis.php" method="post" enctype="multipart/form-data">
                             Enter your profile descroption:
-                            <textarea class="contentpost" rows="3" name="desc"></textarea>
+                            <textarea class="contentpost" rows="3" name="desc" maxlength="120"></textarea>
                             <input class="contentsubmit" type="submit" title="Post" name="descSubmit">
                             <label>
                                 Max 120 characters
