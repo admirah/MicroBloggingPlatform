@@ -127,7 +127,7 @@ if(isset($_POST['post'])) {
                                 <form onsubmit="profileValidation()" method="post" action="profile.php">
 
 
-                                    <textarea class="contentpost" rows="3" name="newEntery"></textarea>
+                                    <textarea class="contentpost" rows="3" name="newEntery" maxlength="200"></textarea>
                                     <input class="contentsubmit" type="submit" title="Post" name="post">
 
 
