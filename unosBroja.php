@@ -2,9 +2,10 @@
     <?php session_start(); 
 $mgs="";
     if(isset($_GET['numSub'])) {
+          date_default_timezone_set('Europe/Sarajevo');
         $kod = str_replace(",","&comma;",$_GET['ccode']);
         $broj = str_replace(",","&comma;",$_GET['phone']);
-    $noviBroj = $_SESSION['loggedUser'] . "," . $kod . "," . $broj . "\r\n";
+    $noviBroj = htmlentities($_SESSION['loggedUser']) . "," . htmlentities($kod) . "," . htmlentities($broj) . "\r\n";
     $sviBrojevi = file_get_contents($_ENV['OPENSHIFT_DATA_DIR'] ."files/brojeviTelefona.csv"); 
    $sviBrojevi=$sviBrojevi . $noviBroj;
    file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/brojeviTelefona.csv",$sviBrojevi);

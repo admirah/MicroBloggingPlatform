@@ -30,7 +30,8 @@ $ok=false;
     }
 
 if(!$ok){
-$red=$name . "," . $uname. "," . $pword. "," . $date. "," . $email. "," . $web."\r\n";
+      date_default_timezone_set('Europe/Sarajevo');
+$red=htmlentities($name) . "," . htmlentities($uname). "," . htmlentities($pword). "," . htmlentities($date). "," . htmlentities($email). "," . htmlentities($web)."\r\n";
     $errTyp = 2;  // 0-No error ; 1-Invalid password ; 3-invalid username
     
     $sviRacuni = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."/files/racuni.csv"); 

@@ -16,9 +16,10 @@ function cmp($a, $b)
      
  }*/
     if(isset($_POST['post'])) {
+          date_default_timezone_set('Europe/Sarajevo');
     $postic = str_replace(",","&comma;",$_POST['noviUnos']);
     $postic = str_replace(array("\r", "\n")," ", $postic);
-    $novaObjava = $_SESSION['loggedUser'] . "," . $postic . "," . date("m.d.Y H:i") . "\r\n";
+    $novaObjava = htmlentities($_SESSION['loggedUser']) . "," . htmlentities($postic) . "," . htmlentities(date("m.d.Y H:i")) . "\r\n";
     $sveObjave = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv"); 
    $sveObjave=$novaObjava . $sveObjave;
    file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv",$sveObjave);

@@ -7,7 +7,7 @@
     $pword = $_POST["pword"];
     $errTyp = 2;  // 0-No error ; 1-Invalid password ; 3-invalid username
     
-    $sviRacuni = file("../files/racuni.csv");
+    $sviRacuni = file($_ENV['OPENSHIFT_DATA_DIR']."/files/racuni.csv");
     
     foreach($sviRacuni as $racun) {
         
