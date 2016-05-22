@@ -16,7 +16,7 @@ if(!isset($_POST["web"])) $web=$_POST["web"]; else $web="x";
 $ok=false;
 
 
- $sviRacuni = file("../files/racuni.csv");
+ $sviRacuni = file($_ENV['OPENSHIFT_DATA_DIR']."/files/racuni.csv");
     
     foreach($sviRacuni as $racun) {
         
@@ -33,9 +33,9 @@ if(!$ok){
 $red=$name . "," . $uname. "," . $pword. "," . $date. "," . $email. "," . $web."\r\n";
     $errTyp = 2;  // 0-No error ; 1-Invalid password ; 3-invalid username
     
-    $sviRacuni = file_get_contents("../files/racuni.csv"); 
+    $sviRacuni = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."/files/racuni.csv"); 
    $sviRacuni.=$red;
-   file_put_contents("../files/racuni.csv",$sviRacuni);
+   file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."/files/racuni.csv",$sviRacuni);
    
     
  header('Location: ../login.php?msgTyp=1');

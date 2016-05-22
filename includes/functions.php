@@ -1,6 +1,6 @@
 <?php 
     function getFullnameByUsername($username) {
-        $svikorisnici = file("files/racuni.csv");
+        $svikorisnici = file($_ENV['OPENSHIFT_DATA_DIR']."files/racuni.csv");
     
         foreach($svikorisnici as $korisnik) {
 
@@ -15,7 +15,7 @@
 
     }
 function getPhoneNumber($username) {
-    $sviBrojevi = file("files/brojeviTelefona.csv");
+    $sviBrojevi = file($_ENV['OPENSHIFT_DATA_DIR']."files/brojeviTelefona.csv");
     
         foreach($sviBrojevi as $broj) {
 

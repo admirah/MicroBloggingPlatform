@@ -5,9 +5,9 @@ $mgs="";
 if(isset($_POST['descSubmit'])) {
         $postic = str_replace(",","&comma;",$_POST['desc']);
     $novaObjava = $_SESSION['loggedUser'] . "," . $postic . "\r\n";
-    $sveObjave = file_get_contents("files/opisiProfila.csv"); 
+    $sveObjave = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."files/opisiProfila.csv"); 
    $sveObjave=$novaObjava . $sveObjave;
-   file_put_contents("files/opisiProfila.csv",$sveObjave);
+   file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/opisiProfila.csv",$sveObjave);
     header('Location: profile.php');
 }
 ?>
