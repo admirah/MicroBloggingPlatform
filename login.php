@@ -40,7 +40,7 @@
                 </div>
 
                 <h1>hayii</h1>
-                <form class="post loginform " onsubmit="loginValidation()" action="includes/validate.php" method="post">
+                <form class="post loginform " onsubmit="return loginValidation()" action="includes/validate.php" method="post">
                     <table class="loginform">
                         <tr>
                             <td>
