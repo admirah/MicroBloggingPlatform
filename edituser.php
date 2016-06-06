@@ -1,9 +1,23 @@
 <?php include ('includes/functions.php'); ?>
     <?php
-
+         include ('includes/db_config.php');
     session_start();
-    if(!empty($_SESSION["loggedUser"])) { header('Location: index.php'); } 
-    
+if(!isset($_SESSION["loggedUser"])) header('Location: login.php');
+$query ="SELECT * FROM users WHERE username = '".mysqli_real_escape_string($connection,$_SESSION["loggedUser"])."' LIMIT 1";
+    $result = mysqli_query($connection, $query);
+    if(mysqli_num_rows($result) != 0) {
+        $user = mysqli_fetch_row($result);
+            $id=$_GET["userid"];
+            if($user[6]!=1 && $id!=$user[0] ) header('Location: index.php');
+        
+        }
+    $id=$_GET["userid"];
+
+ $query ="SELECT * FROM users WHERE id = '".mysqli_real_escape_string($connection,$id)."' LIMIT 1";
+    $result = mysqli_query($connection, $query);
+    if(mysqli_num_rows($result) != 0) {
+        $user = mysqli_fetch_row($result);
+        }
         
     
 ?>
@@ -13,7 +27,7 @@
 
     <head>
         <title>
-            Register
+          Edit
         </title>
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <link rel="stylesheet" type="text/css" href="css/logo.css">
@@ -26,14 +40,22 @@
 
         <?php include 'includes/navbar.php'; ?>
             <div id="posts">
-                <form class="post loginform " name="forma" onsubmit=" return registerValidation(); alert(registerValidation());" method="post" action="includes/validatereg.php">
+                <form class="post loginform " name="forma" onsubmit=" return editValidation(); alert(editValidation());" method="post" action="includes/validateEdit.php">
                     <table class="loginform">
+                         <tr class="none">
+                            <td>
+                                <label>Full name:</label>
+                            </td>
+                            <td>
+                                <input type="text" name="userid" value="<?php  echo $user[0];?>">
+                            </td>
+                        </tr>
                         <tr>
                             <td>
                                 <label>Full name:</label>
                             </td>
                             <td>
-                                <input type="text" name="name" id="name" onkeypress="validation(this)" onfocusout="validation(this)" value="<?php if(isset($_GET['errTyp'])) {echo $_GET['name'];} ?>">
+                                <input type="text" name="name" id="name" onkeypress="validationn(this)" onfocusout="validationn(this)" value="<?php  echo $user[2];?>">
                             </td>
                         </tr>
 
@@ -42,7 +64,7 @@
                                 <label>Username:</label>
                             </td>
                             <td>
-                                <input type="text" name="username" id="username" onkeypress="validation(this)" onfocusout="validation(this)" value="<?php if(isset($_GET['errTyp'])) {echo $_GET['userame'];} ?>">
+                                <input type="text" name="username" id="username" onkeypress="validationn(this)" onfocusout="validationn(this)" value="<?php echo $user[1]; ?>">
                             </td>
                         </tr>
 
@@ -51,15 +73,17 @@
                                 <label>Password:</label>
                             </td>
                             <td>
-                                <input placeholder="Must be 4-8 characters long" type="password" name="pass" id="pass" onkeypress="validation(this)" onfocusout="validation(this)">
+                                <input placeholder="Must be 4-8 characters long" type="password" name="pass" id="pass" onkeypress="validationn(this)" onfocusout="validationn(this)" value="">
+                                
                             </td>
                         </tr>
+                        <tr><td></td><td>Leave empty if you don't want to change password</td></tr>
                         <tr>
                             <td>
                                 <label>Date of birth:</label>
                             </td>
                             <td>
-                                <input type="date" name="date" id="date" onkeypress="validation(this)" onfocusout="validation(this)" value="<?php if(isset($_GET['errTyp'])) {echo $_GET['date'];} ?>">
+                                <input type="date" name="date" id="date" onkeypress="validationn(this)" onfocusout="validationn(this)" value="<?php echo $user[5]; ?>">
                             </td>
                         </tr>
 
@@ -68,18 +92,11 @@
                                 <label>Email:</label>
                             </td>
                             <td>
-                                <input type="email" name="email" id="email" onkeypress="validation(this)" onfocusout="validation(this)" value="<?php if(isset($_GET['errTyp'])) {echo $_GET['email'];} ?>">
+                                <input type="email" name="email" id="email" onkeypress="validationn(this)" onfocusout="validationn(this)" value="<?php echo $user[4]; ?>">
                             </td>
                         </tr>
 
-                        <tr class="none">
-                            <td>
-                                <label>Website (optional):</label>
-                            </td>
-                            <td>
-                                <input type="url" name="web" id="web" onkeypress="validation(this)" onfocusout="validation(this)">
-                            </td>
-                        </tr>
+                       
                         <tr>
                             <td colspan="2">
                                 <label id="usernameajax">

@@ -1,4 +1,6 @@
-<?php include ('includes/functions.php'); ?>
+<?php 
+include('includes/db_config.php');
+include('includes/functions.php'); ?>
     <?php session_start();
 $sendMeToLogin = true;
 if(isset($_GET['username']) && !empty($_SESSION["loggedUser"]) && $_GET['username']==$_SESSION["loggedUser"]) {
@@ -10,15 +12,14 @@ if(isset($_GET['username'])) {
         $sendMeToLogin=false;
         $showUsername=$_GET['username'];
         $showName = getFullnameByUsername($_GET['username']);
-        $showDesc ='The user has not entered any description.';
-        $sviOpisi = file($_ENV['OPENSHIFT_DATA_DIR']."files/opisiProfila.csv");
-        foreach($sviOpisi as $opis) {
-            $infoRacuna = explode(",",$opis);
-            if($infoRacuna[0] == $showUsername) {
-                $showDesc = $infoRacuna[1];
-                break;
-            }
+        
+     
+     
+        if(dajOpis($showUsername)) {
+              $showDesc=dajOpis($showUsername);
         }
+        else $showDesc ='The user has not entered any description.';
+       
         if(getPhoneNumber($showUsername)) {
             $showNumber = getPhoneNumber($showUsername);
         }
@@ -40,16 +41,13 @@ else {
     $loggedProfile = true;
     $showUsername = $_SESSION["loggedUser"];
     $showName = getFullnameByUsername($_SESSION["loggedUser"]);
-    $showDesc ='<a href="dodajOpis.php">Add description</a>';
-        $sviOpisi = file($_ENV['OPENSHIFT_DATA_DIR']."files/opisiProfila.csv");
-        foreach($sviOpisi as $opis) {
-            $infoRacuna = explode(",",$opis);
-            if($infoRacuna[0] == $showUsername) {
-                $showDesc = $infoRacuna[1];
-                break;
-            }
+      if(dajOpis($showUsername)) {
+              $showDesc=dajOpis($showUsername);
         }
-        if(getPhoneNumber($showUsername)) {
+    else
+    $showDesc ='<a href="dodajOpis.php">Add description</a>';
+    
+         if(getPhoneNumber($showUsername)) {
             $showNumber = getPhoneNumber($showUsername);
         }
         else $showNumber = '<a href="unosBroja.php">Add a phone number</a>';
@@ -60,21 +58,39 @@ else {
                 $link = '<a href="uploadPhoto.php" class="uploadPhoto">+</a>';
         }
 }
-
+if (!empty($_SESSION["loggedUser"])) {
+    
+    $query  = "SELECT * FROM users WHERE username = '" . mysqli_real_escape_string($connection,$_SESSION["loggedUser"]) . "' LIMIT 1";
+    $result = mysqli_query($connection, $query);
+    if (mysqli_num_rows($result) != 0) {
+        $user                 = mysqli_fetch_row($result);
+    
+        $_SESSION["loggedId"] = $user[0];
+        $_SESSION["rola"]     = $user[6];
+    }
+}
+    
 
 if(isset($_POST['post'])) {
           date_default_timezone_set('Europe/Sarajevo');
-    $postic = str_replace(",","&comma;",$_POST['newEntery']);
-    $postic = str_replace(array("\r", "\n")," ", $postic);
-        if($postic.length < 201) {
-            $novaObjava = htmlentities($_SESSION['loggedUser']) . "," . htmlentities($postic) . "," . htmlentities(date("m.d.Y H:i")) . "\r\n";
-            $sveObjave = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv"); 
-           $sveObjave=$novaObjava . $sveObjave;
-           file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv",$sveObjave);
+    $x=0;
+    if(isset($_POST["kom"]) && $_POST["kom"]=="on") $x=1;
+     date_default_timezone_set('Europe/Sarajevo');
+  $postic=htmlentities($_POST['newEntery']);
+    if (strlen($postic) < 201) {
+        $sql = "INSERT INTO `posts`(`authorid`, `content`, `dateposted`, `status`) VALUES ('" . mysqli_real_escape_string($connection,$_SESSION["loggedId"]) . "','" . mysqli_real_escape_string($connection, htmlentities($_POST['newEntery'])) . "',NOW(),".mysqli_real_escape_string($connection,$x).")";
+        if (mysqli_query($connection, $sql)) {
+            
+            
+        } else {
+            
         }
+    }
     
         
 }
+
+
 ?>
         
 
@@ -112,8 +128,12 @@ if(isset($_POST['post'])) {
                             </ul>
                             <div class="nonbatnarea">
                                 <a class="username" href="#">
-                                    <?php echo $showName; ?>
+                                    <?php echo $showName;
+                                   
+                                    ?>
+                             <?php echo '  <form method="post" style="display:inline" action="edituser.php?userid='.  $_SESSION["loggedId"] .'"> <input type="submit" value="Edit"></form>';?>
                                 </a>
+                               
 
                                 <div class="date">
                                     @
@@ -123,38 +143,56 @@ if(isset($_POST['post'])) {
                                 <div class="opisProfila">
                                     <?php echo $showDesc; ?>
                                 </div>
+                               
                             </div>
                         </div>
+                          
                     </div>
+                   
                     <?php if ($loggedProfile) { ?>
                         <div class="post">
                             <div class="antiLR">
                                 <form onsubmit=" return profileValidation()" method="post" action="profile.php">
                                     <textarea class="contentpost" rows="3" name="newEntery" maxlength="200"></textarea>
                                     <input class="contentsubmit" type="submit" title="Post" name="post">
-
-
-
+                                    <input type="checkbox" title="Approve comments" name="kom">Disable comments
                                 </form>
                             </div>
                         </div>
                         <?php } ?>
                             <br>
                             <?php
-                    $sveObjave = file($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv");
+                    $sveObjave = getObjave();
     
-    foreach($sveObjave as $objava) {
+ 
         
-        $objavaUNizu = explode(",",$objava);
        // echo $infoRacuna[1].$uname;
+         while($objavaUNizu = mysqli_fetch_row($sveObjave))  {
         if($objavaUNizu[0] == $showUsername) {
             echo '<div class="post">' . '<div class="left">';
             echo $link;
-            echo '</div><div class="right">' . '<a class="username" href="#">' . $showName . '</a>' . '<div class="datepomocni">'; 
+            echo '</div><div class="right">' . '<a class="username" href="#">' .$objavaUNizu[0] . '</a>' ;
+            if($objavaUNizu[0]==$_SESSION["loggedUser"])    echo '<a class="username" href="post.php?postid=' . $objavaUNizu[3] . '"> +(' . $objavaUNizu[5]. ')</a>'; 
+                echo'<div class="datepomocni">'; 
+             
             echo $objavaUNizu[2].'</div> <div class="proteklo"></div>';
-            echo '<div class="date">'.$objavaUNizu[2].'</div><div class="content">' . $objavaUNizu[1];  
-            echo '</div></div></div>';
-        }
+            echo '<div class="date">'.$objavaUNizu[2];
+               echo '</div><a class="username content" href="post.php?postid='.$objavaUNizu[3].'">' . $objavaUNizu[1];  
+            echo '</a></div>';
+            if (isset($_SESSION["rola"] ) && $_SESSION["rola"] == 1) {
+        echo '<table class="floatright">
+           <tr> <td>';
+             echo '<input type="checkbox" name="odobrikom"';
+       if ($objavaUNizu[4]==1) echo 'checked="on"';
+           echo 'onclick="odobriKomentare(' . $objavaUNizu[3] . ',this)">Disable comments';
+       echo '</td><td>';
+        echo ' <form method="post" action="index.php?postid=' . $objavaUNizu[3] . '">
+                                                 <input type="submit" name="obrisiPost" value="Delete"></form>';
+  echo' </td>     </tr>
+       </table>';
+    }
+    echo '</div>';
+}
     }
                 
                 ?>

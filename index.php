@@ -1,33 +1,52 @@
-<?php include ('includes/functions.php'); ?>
-    <?php session_start(); 
-$_SESSION['abecedno']=1;
+<?php
+include('includes/db_config.php');
+include('includes/functions.php');
+?>
+    <?php
+session_start();
+$_SESSION['abecedno'] = 1;
 
 
-function cmp($a, $b)
-{
-    $niz=explode(',',$a);
-    $niz1=explode(',',$b);
-   
-    return (strtolower($niz[1]) < strtolower($niz1[1])) ? -1 : 1;
-}
+
 /* if(isset($_SESSION['abecedno']) && isset($_SESSION['abecedno'])==2)){
-     usort($sveObjave, "cmp");
+usort($sveObjave, "cmp");
 
-     
- }*/
-    if(isset($_POST['post'])) {
-          date_default_timezone_set('Europe/Sarajevo');
-    $postic = str_replace(",","&comma;",$_POST['noviUnos']);
-    $postic = str_replace(array("\r", "\n")," ", $postic);
-        if($postic.length < 201) {
-            $novaObjava = htmlentities($_SESSION['loggedUser']) . "," . htmlentities($postic) . "," . htmlentities(date("m.d.Y H:i")) . "\r\n";
-            $sveObjave = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv"); 
-           $sveObjave=$novaObjava . $sveObjave;
-           file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv",$sveObjave);
-        }
+
+}*/
+if (isset($_POST['post'])) {
+    $postic =  htmlentities($_POST['noviUnos']);
+     $x=0;
+    if(isset($_POST["kom"]) && $_POST["kom"]=="on") $x=1;
+  
     
-        
+    if (strlen($postic) < 201) {
+        $sql = "INSERT INTO `posts`(`authorid`, `content`, `dateposted`, `status`) VALUES ('" . mysqli_real_escape_string($connection,$_SESSION["loggedId"]) . "','" . mysqli_real_escape_string($connection, htmlentities($_POST['noviUnos'])) . "',NOW(),".mysqli_real_escape_string($connection,$x).")";
+        if (mysqli_query($connection, $sql)) {
+         
+            
+            
+        } else {
+            
+        }
+    }
+    
+    
 }
+if (isset($_POST['obrisiPost'])&& isset($_GET["postid"]) ) {
+   
+    date_default_timezone_set('Europe/Sarajevo');
+    $postic = $_GET['postid'];
+    
+    $sql = "DELETE FROM `posts` WHERE id=" . mysqli_real_escape_string($connection,$postic);
+    if (mysqli_query($connection, $sql)) {
+      
+        
+    } else {
+        
+    }
+}
+
+
 
 
 ?>
@@ -49,40 +68,61 @@ function cmp($a, $b)
 
         <body>
             
-            <?php include 'includes/navbar.php'; ?>
+            <?php
+include 'includes/navbar.php';
+?>
 <div class="date datenone"></div>
 
                 <div id="posts">
-                    <?php 
-                
-        if(!empty($_SESSION["loggedUser"])) {
-            $filename = 'images/users/'.$_SESSION['loggedUser'].'.jpg';
-            if (file_exists($filename)) {
-                $postoji = 1;
-            } else {
-                    $postoji = 0;
-            }
+                    <?php
 
-        ?>
+if (!empty($_SESSION["loggedUser"])) {
+    
+    $query  = "SELECT * FROM users WHERE username = '" . mysqli_real_escape_string($connection,$_SESSION["loggedUser"]) . "' LIMIT 1";
+    $result = mysqli_query($connection, $query);
+    if (mysqli_num_rows($result) != 0) {
+        $user                 = mysqli_fetch_row($result);
+        $_SESSION["loggedId"] = $user[0];
+        $_SESSION["rola"]     = $user[6];
+    }
+    $filename = 'images/users/' . $_SESSION['loggedUser'] . '.jpg';
+    if (file_exists($filename)) {
+        $postoji = 1;
+    } else {
+        $postoji = 0;
+    }
+    
+?>
                         
                            
                            <div class="post">
                             <form  onsubmit="return indexValidation()" action="index.php" method="post">
                                 <div class="left">
-                                    <?php if($postoji==1) {?><img alt="photo" class="photo" src="images/users/<?php echo $_SESSION["loggedUser"]; ?>.jpg">
-                                        <?php } ?>
+                                    <?php
+    if ($postoji == 1) {
+?><img alt="photo" class="photo" src="images/users/<?php
+        echo $_SESSION["loggedUser"];
+?>.jpg">
+                                        <?php
+    }
+?>
                                 </div>
                                 <div class="right">
                                     <a class="username" href="#">
-                                        <?php echo getFullnameByUsername($_SESSION["loggedUser"]); ?>
+                                        <?php
+    echo getFullnameByUsername($_SESSION["loggedUser"]);
+?>
                                     </a>
 
                                     <textarea class="contentpost" name="noviUnos" rows="3" maxlength="200"></textarea>
+                                    <input type="checkbox" title="Approve comments" name="kom"> Disable comments
                                     <input class="contentsubmit" name="post" type="submit" title="Post">
                                 </div>
                             </form>
                         </div>
-                        <?php } ?>
+                        <?php
+}
+?>
 
 
 
@@ -108,155 +148,38 @@ function cmp($a, $b)
                             <!-- OBJAVE -->
 
                             <?php
-                    $sveObjave = file($_ENV['OPENSHIFT_DATA_DIR']."files/objave.csv");
-                    if(isset($_GET['abecedno']) && $_GET['abecedno']=="ABC")
-                        usort($sveObjave,"cmp");
+$sveObjave = getObjave();
+if (isset($_GET['abecedno']) && $_GET['abecedno'] == "ABC")
+ $sveObjave = getObjaveABC();
 
-                    foreach($sveObjave as $objava) {
-                        $objavaUNizu = explode(",",$objava);
-                        echo '<div class="post">' . '<div class="left">';
-                        if(file_exists('images/users/'.$objavaUNizu[0].'.jpg')) echo '<img alt="photo" class="photo" src="'.'images/users/'.$objavaUNizu[0].'.jpg'.'">';
-                        echo '</div><div class="right">' . '<a class="username" href="profile.php?username='. $objavaUNizu[0] .'">' . getFullnameByUsername($objavaUNizu[0]) . '</a>' . '<div class="date">' . $objavaUNizu[2].'</div><div class="datepomocni">' . $objavaUNizu[2].'</div><div class="proteklo">';
-                        echo '</div><div class="content">' . $objavaUNizu[1] . '</div></div></div>';
-                    }
+while ($objavaUNizu = mysqli_fetch_row($sveObjave)) {
+    echo '<div class="post">' . '<div class="left">';
+    if (file_exists('images/users/' . $objavaUNizu[0] . '.jpg'))
+        echo '<img alt="photo" class="photo" src="' . 'images/users/' . $objavaUNizu[0] . '.jpg' . '">';
+    echo '</div><div class="right">' . '<a class="username" href="profile.php?username=' . $objavaUNizu[0] . '">' . $objavaUNizu[0]. '</a>' ;
+   if(isset($_SESSION["loggedUser"] ) && $objavaUNizu[0]==$_SESSION["loggedUser"])    echo '<a class="username" href="post.php?postid=' . $objavaUNizu[3] . '"> +(' . $objavaUNizu[5]. ')</a>'; 
+      echo  '<div class="date">' . $objavaUNizu[2] . '</div><div class="datepomocni">' . $objavaUNizu[2] . '</div><div class="proteklo">';
+    echo '</div><a class="username content" href="post.php?postid=' . $objavaUNizu[3] . '">' . $objavaUNizu[1] . '</a></div>';
+   if (isset($_SESSION["rola"] ) && $_SESSION["rola"] == 1) {
+      echo '<table class="floatright">
+           <tr> <td>';
+           echo '<input type="checkbox" name="odobrikom"';
+       if ($objavaUNizu[4]==1) echo 'checked="on"';
+       
+           echo 'onclick="odobriKomentare(' . $objavaUNizu[3] . ',this)">Disable comments';
 
-                ?>
-                                <!--
-                    <div class="post">
-                        <div class="left"><img alt="photo" class="photo" src="images/admira.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">admira</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">4 .3.2016 18:42</div>
-                            <div class="date">4.3.2016 18:42</div>
-                            <div class="content">Validacijo validacijo</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img alt="photo" class="photo" src="images/admira.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">admira</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">4.2.2016 20:42</div>
-                            <div class="date">4.2.2016 20:42</div>
-                            <div class="content">Validacijo validacijo</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img alt="photo" class="photo" src="images/admira.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">admira</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">4.2.2016 19:42</div>
-                            <div class="date">4.2.2016 19:42</div>
-                            <div class="content">Wt al the way</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img alt="photo" class="photo" src="images/emina.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">minnie</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">4.1.2016 23:42</div>
-                            <div class="date">4.1.2016 23:42</div>
-                            <div class="content">Salvador Dali da je bio obrazovan znao bi da se dali pise odvojeno</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img alt="photo" class="photo" src="images/emina.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">minnie</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">4.1.2016 23:42</div>
-                            <div class="date">4.1.2016 23:42</div>
-                            <div class="content">Salvador Dali da je bio obrazovan znao bi da se dali pise odvojeno</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img alt="photo" class="photo" src="images/emina.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">minnie</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">4.1.2016 23:42</div>
-                            <div class="date">4.1.2016 23:42</div>
-                            <div class="content">Salvador Dali da je bio obrazovan znao bi da se dali pise odvojeno</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img alt="photo" class="photo" src="images/emina.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">minnie</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">3.18.2016 23:42</div>
-                            <div class="date">3.18.2016 23:42</div>
-                            <div class="content">Salvador Dali da je bio obrazovan znao bi da se dali pise odvojeno</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img alt="photo" class="photo" src="images/admira.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">admira</a>
-                            <div class="datepomocni">3.14.2016 14:06</div>
-
-                            <div class="proteklo"></div>
-                            <div class="date">3.14.2016 14:06</div>
-                            <div class="content">I dalje pravim svoj tvitercic! -.-'</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img alt="photo" class="photo" src="images/belmin.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">belmin</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">3.14.2016 14:06</div>
-                            <div class="date">3.14.2016 14:06</div>
-                            <div class="content">Život je ono što se desi između momenata koje si planirao</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img class="photo" alt="photo" src="images/emina.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">minnie</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">3.14.2016 14:06</div>
-                            <div class="date">3.14.2016 14:06</div>
-                            <div class="content">Ugani koljeno. Koljeno u Gani</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img class="photo" alt="photo" src="images/admira.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">admira</a>
-                            <div class="proteklo"></div>
-
-                            <div class="datepomocni">3.14.2016 14:06</div>
-                            <div class="date">3.14.2016 14:06</div>
-                            <div class="content">Pravim svoj tvitercic! :D</div>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <div class="left"><img class="photo" alt="photo" src="images/bake.PNG"></div>
-                        <div class="right">
-                            <a class="username" href="#">bake</a>
-
-                            <div class="proteklo"></div>
-                            <div class="datepomocni">3.14.2016 14:06</div>
-                            <div class="date">3.14.2016 13:06</div>
-                            <div class="content">Bolje biti jedan dan bogat, nego cijeli život siromašan.</div>
-                        </div>
-                    </div>
+       echo '</td><td>';
+        echo ' <form method="post" action="index.php?postid=' . $objavaUNizu[3] . '">
+                                                 <input type="submit" name="obrisiPost" value="Delete"></form>';
+  echo' </td>     </tr>
+       </table>';
+    }
+    echo '</div>';
+}
 
 
--->
+?>
+                   
                 </div>
 
 

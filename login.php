@@ -1,6 +1,6 @@
-<?php include ('includes/functions.php'); ?>
-    <?php
-
+<?php 
+    include ('includes/functions.php'); 
+    include ('includes/db_config.php');
     session_start();
     if(!empty($_SESSION["loggedUser"])) { header('Location: index.php'); } else {
         
@@ -84,4 +84,6 @@
 
     </html>
 
-    <?php } ?>
+    <?php }
+mysqli_close($connection);
+?>

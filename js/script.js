@@ -67,26 +67,44 @@ function submitPost() {
 }
 
 
-setInterval(function () {
+setInterval(function() {
+;
+    var datumi = document.getElementsByClassName("date");
+    var datumipom = document.getElementsByClassName("datepomocni");
 
-        var datumi = document.getElementsByClassName("date");
-        var datumipom = document.getElementsByClassName("datepomocni");
+    var proteklo = document.getElementsByClassName("proteklo");
 
-        var proteklo = document.getElementsByClassName("proteklo");
+    for (var i = 0; i < datumipom.length; i++) {
+        var objekat = getDate(datumipom[i].innerText);
+        datumi[i + 1].innerText = objekat.vrijeme;
+        proteklo[i].innerText = objekat.proteklo;
 
-        for (var i = 0; i < datumipom.length; i++) {
-            var objekat = getDate(datumipom[i].innerText);
-            datumi[i + 1].innerText = objekat.vrijeme;
-            proteklo[i].innerText = objekat.proteklo;
+    }
+
+}, 100);
+
+setInterval(function() {
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+            document.getElementById("notif").innerHTML = "+" + String(xmlhttp.responseText);
 
         }
 
     }
-    , 100);
 
-window.onload = function () {
 
-    console.log("aa");
+    xmlhttp.open("GET", "js/funn.php", true);
+    xmlhttp.send();
+
+
+}, 1000);
+
+window.onload = function() {
+
+   
     var datumi = document.getElementsByClassName("date");
     var datumipom = document.getElementsByClassName("datepomocni");
 
@@ -102,8 +120,11 @@ window.onload = function () {
 }
 
 function getDate(mydate) {
+  
     var datum = new Date(Date.parse(mydate));
+   
     var trenutno = new Date(); //.getTime();
+  
     var datum1 = (trenutno - datum) / (1000 * 60);
     var proteklo;
     datum1 = parseInt(datum1);
@@ -187,6 +208,63 @@ function show(prikaz) {
         } else postovi[i].parentNode.parentNode.style.display = "table";
 
     }
+
+
+}
+
+function odgovori(idposta) {
+    var polje = document.getElementsByClassName(String(idposta) + "dugme");
+    if (polje[0].style.display == "none")
+        polje[0].style.display = "table";
+    else polje[0].style.display = "none";
+    return false;
+}
+
+
+function sakrij(idposta) {
+
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+            var komentari = document.getElementsByClassName(String(idposta));
+            for (var i = 0; i < komentari.length; i++) {
+                if (komentari[i].style.display == "none")
+                    komentari[i].style.display = "table";
+                else komentari[i].style.display = "none";
+
+
+            }
+            return false;
+        }
+    }
+
+    xmlhttp.open("GET", "js/fun.php?idposta=" + String(idposta), true);
+    xmlhttp.send();
+
+
+
+}
+
+function odobriKomentare(idposta, element)
+
+
+{
+    var klik = 0;
+    if (element.checked == true) klik = 1;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+            
+
+        }
+        return false;
+    }
+
+    xmlhttp.open("GET", "js/odobriKom.php?idposta=" + String(idposta) + "&&klik=" + klik, true);
+    xmlhttp.send();
 
 
 }

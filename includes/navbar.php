@@ -1,4 +1,16 @@
 
+<?php
+   include ('db_config.php');
+if(isset($_SESSION["loggedUser"])){
+$query ="SELECT role FROM users WHERE username = '".mysqli_real_escape_string($connection,$_SESSION["loggedUser"])."' LIMIT 1";
+    $result = mysqli_query($connection, $query);
+    if(mysqli_num_rows($result) != 0) {
+        $user = mysqli_fetch_row($result);
+          
+           $_SESSION["id"]=$user[0];
+        }
+}
+?>
     <div id="navbar">
         <div class="nav">
             <table class="logotabela">
@@ -19,9 +31,14 @@
                     <td>
                         <ul class="ulleft">
                             <li><a href="index.php">Home</a></li>
-                            <li>
+                            <?php if(isset($_SESSION["id"]) && $_SESSION["id"]==1) {echo' <li>
                                 <a href="users.php"> Users</a>
-                            </li>
+                            </li>';}?>
+                         <?php if(isset($_SESSION["loggedUser"])) {echo  '<li>
+                                <a id="notif" href="#">+ ';
+                         if(isset($_SESSION["notif"]) ) echo  $_SESSION["notif"];
+                            else echo "0";
+                      echo   '</a> </li>';}?>
 
                         </ul>
                     </td>

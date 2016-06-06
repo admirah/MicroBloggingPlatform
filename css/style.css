@@ -58,6 +58,9 @@ body {
     margin-bottom: 15px;
 }
 
+
+
+
 .left {
     margin: 15px;
     width: 130px;
@@ -95,12 +98,37 @@ a.uploadPhoto {
     height: 130px;
     float: right;
 }
+.rightpost{
+    width: 570px;
+    border-bottom: 3px solid #83b2ac;
+    margin-bottom: 5px;
 
+}
+.none{
+    display:none;
+}
+.podpost{
+    width: 520px;
+    float:right;
+    font-size:12px;
+    border: 2px solid #b28470;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    background-color: white;
+    border-radius: 10px;    
+}
+.glavnipost{
+    border:5px solid black;
+}
 .username {
     font-size: 25px;
     font-weight: 200;
     text-decoration: none;
     color: black;
+}
+
+.usernamepost{
+     font-size: 18px;
 }
 
 .username a {
@@ -110,13 +138,23 @@ a.uploadPhoto {
 .username:visited {
     color: black;
 }
-
+.floatright{
+    
+    float:right;
+    padding:0 10px 10px 0;
+}
 .username:hover {
     color: #83b2ac;
     transition: all 0.2s;
 }
 
 .date {
+    font-size: 10px;
+    color: #83b2ac;
+    border-bottom: 1px solid #83b2ac;
+    margin-bottom: 5px;
+}
+.datep {
     font-size: 10px;
     color: #83b2ac;
     border-bottom: 1px solid #83b2ac;
@@ -376,4 +414,35 @@ input[type="submit"]:hover {
 
 .selectbutton select:hover {
     background-color: #5a7b77;
+}
+
+.podkomentarunos{
+    width: 520px;
+    float:right;
+    font-size:12px;
+    padding: 15px;;
+    border: 2px solid #b28470;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    background-color: white;
+    border-radius: 10px;    
+} 
+.komentarunos{
+    width: 530px;
+  
+    font-size:12px;
+    padding: 10px;;
+
+    border: 2px solid #b28470;
+     margin-top: 25px;
+    margin-bottom: 5px;
+    margin-right: 25px;
+    margin-left:25px;
+    background-color: white;
+    border-radius: 10px;    
+} 
+
+.podkomsub {
+    margin-right: 10px;
+    margin-bottom: 10px;
 }

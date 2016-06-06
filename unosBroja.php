@@ -1,16 +1,27 @@
 <?php include ('includes/functions.php'); ?>
+   
     <?php session_start(); 
+ include ('includes/db_config.php');
 $mgs="";
     if(isset($_GET['numSub'])) {
           date_default_timezone_set('Europe/Sarajevo');
-        $kod = str_replace(",","&comma;",$_GET['ccode']);
-        $broj = str_replace(",","&comma;",$_GET['phone']);
-    $noviBroj = htmlentities($_SESSION['loggedUser']) . "," . htmlentities($kod) . "," . htmlentities($broj) . "\r\n";
-    $sviBrojevi = file_get_contents($_ENV['OPENSHIFT_DATA_DIR'] ."files/brojeviTelefona.csv"); 
-   $sviBrojevi=$sviBrojevi . $noviBroj;
-   file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/brojeviTelefona.csv",$sviBrojevi);
+        $kod = str_replace(",","&comma;", htmlentities($_GET['ccode']));
+        $broj = str_replace(",","&comma;", htmlentities($_GET['phone'])); 
+var_dump($broj);
+        $sql = "UPDATE users SET phone=".mysqli_real_escape_string($connection,$broj)." WHERE username='".mysqli_real_escape_string($connection,$_SESSION["loggedUser"])."'";
+
+
+if (mysqli_query($connection, $sql)) {
+   
     header('Location: profile.php');
-    }
+} else {
+   
+}
+    
+}
+    
+  
+   
 ?>
 
         <!doctype html>

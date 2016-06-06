@@ -1,15 +1,20 @@
 <?php include ('includes/functions.php'); ?>
 <?php session_start(); 
 $mgs="";
+ include ('includes/db_config.php');
 
 if(isset($_POST['descSubmit'])) {
       date_default_timezone_set('Europe/Sarajevo');
-        $postic = str_replace(",","&comma;",$_POST['desc']);
-    $novaObjava =htmlentities($_SESSION['loggedUser']) . "," . htmlentities($postic) . "\r\n";
-    $sveObjave = file_get_contents($_ENV['OPENSHIFT_DATA_DIR']."files/opisiProfila.csv"); 
-   $sveObjave=$novaObjava . $sveObjave;
-   file_put_contents($_ENV['OPENSHIFT_DATA_DIR']."files/opisiProfila.csv",$sveObjave);
-    header('Location: profile.php');
+  
+    $sql = "UPDATE users SET description='".mysqli_real_escape_string($connection, htmlentities($_POST['desc']))."' WHERE username='".mysqli_real_escape_string($connection,$_SESSION["loggedUser"])."'";
+
+
+if (mysqli_query($connection, $sql)) {
+        header('Location: profile.php');
+} else {
+    
+}
+
 }
 ?>
 
